@@ -138,14 +138,14 @@ def addfolder(request):
                 tpl = DocxTemplate(file_path)
                 context = {"title":"Chetan"}
                 tpl.render(context)
-                tpl.save(file_path11 + "/" + "%s.docx" %str(f.name).split('.')[0])
+                tpl.save(file_path11 + "/" + "%s.docx" %str(f.name).split('.')[0].replace(" ", "_"))
             else:
                 
                 os.makedirs(file_path11)
                 tpl = DocxTemplate(file_path)
                 context = {"title":"Chetan"}
                 tpl.render(context)
-                tpl.save(file_path11 + "/" + "%s.docx" %str(f.name).split('.')[0])
+                tpl.save(file_path11 + "/" + "%s.docx" %str(f.name).split('.')[0].replace(" ", "_"))
             
 
             
