@@ -1,0 +1,218 @@
+{% extends 'layouts/base.html' %}
+
+{% block title %} Dashboard {% endblock title %}
+
+<!-- Specific CSS goes HERE -->
+{% block stylesheets %}
+<style>
+
+  
+  #file-chosen{
+    margin-left: 0.3rem;
+    font-family: sans-serif;
+  }
+
+  .navbar-vertical .navbar-nav > .nav-item .nav-link.active .icon {
+    background-image: linear-gradient(310deg, #82d616 0%, #82d616 100%);
+  }
+
+</style>
+
+{% endblock stylesheets %}
+
+{% block body_class %} g-sidenav-show bg-gray-100 {% endblock %}
+
+{% block content %}
+
+<div style="display: flex; padding: 10px 20px; justify-content: space-between">
+  <div class="">
+    <div class="container py-3">
+      <div class="col-5">
+        <button
+      type="button"
+      class="btn btn-outline-primary"
+      data-bs-toggle="modal"
+      data-bs-target="#exampleModal"
+      
+    >
+      New Project
+    </button>
+      </div>
+      <div class="row">
+        <!--  -->
+        {% for i in folder %}
+        <div class="col-sm">
+          <div class="card" style="margin-top: 5px; width: 18rem">
+            <div class="card-body">
+              <h5 class="card-title">{{i.foldername}}</h5>
+              <p class="card-text">{{i.folderdesc}}</p>
+              <a href="{% url 'folder' i.id %}" class="btn btn-outline-primary"
+                >Go Folder
+              </a>
+              <a href="{% url 'delete' i.id %}" class="btn btn-outline-primary"
+                >Delete
+              </a>
+            </div>
+          </div>
+        </div>
+        {% endfor %}
+        <!--  -->
+      </div>
+    </div>
+  </div>
+  
+  <div class="">
+    <!-- Button trigger modal -->
+    
+
+    <!-- Modal -->
+    <div
+      class="modal fade"
+      id="exampleModal"
+      tabindex="-1"
+      aria-labelledby="exampleModalLabel"
+      aria-hidden="true"
+    >
+      <div class="modal-dialog">
+        <div class="modal-content">
+          <div class="row">
+            <div class="col-lg-12 col-12 mx-auto">
+              <div class="card card-body mt-4">
+                <form action="{% url 'addfolder' %}" method="POST" enctype="multipart/form-data">
+                  {% csrf_token %}
+                <h6 class="mb-0">New Project</h6>
+                <p class="text-sm mb-0">Create new project</p>
+                <hr class="horizontal dark my-3">
+                <label for="projectName" class="form-label">Project Name</label>
+                <input type="text" class="form-control" name="foldername" id="projectName" required>
+                
+                <label class="mt-4">Project Description</label>
+                
+                <input type="text" class="form-control" name="desc" required>
+                
+                <label class="mt-4 form-label">Input Files</label>
+                  
+                  
+                    <div class="fallback">
+                      <input name="file" type="file" id="actual-btn" hidden multiple required/>
+                      
+                      <label class="btn bg-gradient-primary m-0 ms-2" for="actual-btn">Choose File</label>
+                      <!-- name of file chosen -->
+                      <span id="file-chosen">No file chosen</span>
+                    </div>
+                  
+                
+                <div class="d-flex justify-content-end mt-4">
+                  <button type="button" name="button" class="btn btn-light m-0"><a href="/">Cancel</a></button>
+                  <button id="submitbtn" type="submit" name="button" class="btn bg-gradient-primary m-0 ms-2">Create Project</button>
+                </div>
+                
+                
+            </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock content %}
+
+<!-- Specific JS goes HERE --> 
+{% block javascripts %} 
+
+  <script src="/static/assets/js/plugins/choices.min.js"></script>
+  <script src="/static/assets/js/plugins/quill.min.js"></script>
+  <script src="/static/assets/js/plugins/flatpickr.min.js"></script>
+  <script src="/static/assets/js/plugins/dropzone.min.js"></script>
+  <script>
+
+    const actualBtn = document.getElementById('actual-btn');
+    const home = document.getElementById('home');
+    const homeico = document.getElementById('homeico');
+
+    home.onclick = function(){
+      clrhome()
+    }
+
+    const fileChosen = document.getElementById('file-chosen');
+
+    actualBtn.addEventListener('change', function(){
+      var valam = parseInt(0)
+      var valpm = parseInt(0)
+      for (var i = 0; i < this.files.length; ++i) {
+        //console.log(this.files[i].name)
+
+        if (this.files[i].name.includes("AM_report")){
+          //console.log("YES")
+          valam++
+        }
+
+        if (this.files[i].name.includes("PM_report")){
+          //console.log("YES")
+          valpm++
+        }
+        //alert(this.files[i].name.substring("AM"))
+        var allowedExtensions =
+                    /(\.txt)$/i;
+
+        if (!allowedExtensions.exec(this.files[i].name)) {
+                alert('Invalid file type');
+                document.getElementById('submitbtn').style.display = "none"
+                fileInput.value = '';
+                return false;
+            }
+        else{
+          document.getElementById('submitbtn').style.display = "block"
+        }
+        //children += '<li>' + input.files.item(i).name + '</li>';
+      }
+      //console.log(valam)
+      //console.log(valpm)
+
+      if (valam == valpm){
+        document.getElementById('submitbtn').style.display = "block"
+      }
+      if (valam != valpm){
+        document.getElementById('submitbtn').style.display = "none"
+      }
+
+      if(this.files.length = 1){
+        fileChosen.textContent = this.files[0].name
+      }
+      if(this.files.length > 1){
+        fileChosen.textContent = this.files.length +" " + "files selected"
+      }
+      
+    });
+    
+
+    Dropzone.autoDiscover = false;
+    var drop = document.getElementById('dropzone')
+    var myDropzone = new Dropzone(drop, {
+      url: "/file/post",
+      addRemoveLinks: true
+
+    });
+
+
+    document.getElementById('btnclose').onclick = function(){
+      close()
+    }
+
+    function close(){
+      document.getElementById('exampleModal').style.display = "none"
+      
+    }
+
+    function clrhome(){
+      homeico.style.backgroundImage = "linear-gradient(310deg, #82d616 0%, #82d616 100%)";
+      
+    }
+
+
+  </script>
+
+{% endblock javascripts %}
