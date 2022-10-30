@@ -47,6 +47,8 @@ def index(request):
 # Folder with files in it
 def folder(request,folderid):
     global folder_name
+    global f_id
+    f_id = folderid
     folder_user = Folder.objects.get(id=folderid)
     folder_name = folder_user.foldername
     print(folder_user.foldername)
@@ -77,20 +79,68 @@ def folder(request,folderid):
     #     print("Files:",f)
 
     if request.method == 'POST':
-        file_user = request.FILES.get('file')
-        file_title = request.POST.get('filetitle')
-        fileadd = File.objects.create(filetitle=file_user.name,file=file_user,folder=folder_user)
+        # file_user = request.FILES.get('file')
+        # file_title = request.POST.get('filetitle')
+        # fileadd = File.objects.create(filetitle=file_user.name,file=file_user,folder=folder_user)
         
+        folder_name = folder_user.foldername 
+        folder_desc = folder_user.folderdesc
+        print("Folder Desc:",folder_desc)
+        # folder = Folder.objects.create(foldername=folder_name,folderdesc=folder_desc,folderuser=request.user)
+        # folder.save()
+        #file_title = request.FILES['file']
+        file_user = request.FILES.getlist('file')
+        file_path11 = settings.STATIC_ROOT + '/' + request.user.email + '/' + folder_name
+
+        for f in file_user:
+            # file_title = request.POST.get('filetitle')
+            fileadd = File.objects.create(filetitle=f.name,file=f,folder=folder_user)
+
+            fpath = settings.STATIC_ROOT
+            file_path = settings.MEDIA_ROOT +'/template1.docx'
+            file_path11 = settings.STATIC_ROOT + '/' + request.user.email + '/' + folder_name
+
+            if os.path.exists(file_path11):
+                tpl = DocxTemplate(file_path)
+                context = {"title":"Chetan"}
+                tpl.render(context)
+                tpl.save(file_path11 + "/" + "%s.docx" %str(f.name).split('.')[0].replace(" ", "_"))
+                # print("File name:",str(f.name).split('.')[0].replace(" ", "_"))
+            else:
+                
+                os.makedirs(file_path11)
+                tpl = DocxTemplate(file_path)
+                context = {"title":"Chetan"}
+                tpl.render(context)
+                tpl.save(file_path11 + "/" + "%s.docx" %str(f.name).split('.')[0].replace(" ", "_"))
+                # print("File name:",str(f.name).split('.')[0].replace(" ", "_"))
+        return redirect("folder",folderid=int(folderid))
     return render(request,'home/folder.html',context)
 
 # Delete Folder with files in it
 def delete(request,deleteid):
     
     folder_user = Folder.objects.get(id=deleteid)
+    folder_name = folder_user.foldername
+    files = File.objects.filter(folder=folder_user)
+    files.delete()
     folder_user.delete()
     context = {'folder':folder,'segment':'index'}
 
     return redirect("index")
+
+# Delete Folder with files in it
+def fdelete(request,fileid):
+    
+    file_user = File.objects.get(id=fileid)
+    # folder_name = folder_user.foldername
+    # files = File.objects.filter(folder=folder_user)
+    file_user.delete()
+    # folder_user.delete()
+    context = {'folder':folder,'segment':'index'}
+
+    return redirect("folder",folderid=int(f_id))
+
 
 # Folder with files in it
 def image(request):
@@ -139,6 +189,7 @@ def addfolder(request):
                 context = {"title":"Chetan"}
                 tpl.render(context)
                 tpl.save(file_path11 + "/" + "%s.docx" %str(f.name).split('.')[0].replace(" ", "_"))
+                # print("File name:",str(f.name).split('.')[0].replace(" ", "_"))
             else:
                 
                 os.makedirs(file_path11)
@@ -146,7 +197,7 @@ def addfolder(request):
                 context = {"title":"Chetan"}
                 tpl.render(context)
                 tpl.save(file_path11 + "/" + "%s.docx" %str(f.name).split('.')[0].replace(" ", "_"))
-            
+                # print("File name:",str(f.name).split('.')[0].replace(" ", "_"))
 
             
             # file_bytes = io.BytesIO()

@@ -14,6 +14,7 @@ urlpatterns = [
     path("folder/<int:folderid>/",views.folder, name="folder"),
     path("addFolder/", views.addfolder, name="addfolder"),
     path("delete/<int:deleteid>/",views.delete, name="delete"),
+    path("file/<int:fileid>/",views.fdelete, name="file"),
     path("image/", views.image, name="image"),
 
     re_path(r'^.*\.*', views.pages, name='pages'),

@@ -65,12 +65,10 @@
                         <a href="{{file.file.url}}" download="{file.file.url}" class="btn btn-outline-primary">Download File </a>
                       </td>
                       <td class="px-2 py-1 align-middle text-center">
-                        <a class="btn btn-outline-primary btn-sm edit-data" href="javascript:void(0)" data-id="{{ post.pk }}" title="Edit">
-                            <i class="fa fa-edit"></i>
-                        </a>
-                        <button class="btn btn-outline-danger btn-sm delete-data" type="button" data-id="{{ post.pk }}" title="Delete">
+                        
+                        <a href="{% url 'file' file.id %}" class="btn btn-outline-danger btn-sm delete-data" type="button" data-id="{{ post.pk }}" title="Delete">
                             <i class="fa fa-trash"></i>
-                        </button>
+                        </a>
                     </td>
                     </tr>
                     {% endfor %}
@@ -93,14 +91,7 @@
                       <td class="align-middle text-center text-sm">
                         <a href="{{ n }}" class="btn btn-outline-primary">Download File </a>
                       </td>
-                      <td class="px-2 py-1 align-middle text-center">
-                        <a class="btn btn-outline-primary btn-sm edit-data" href="javascript:void(0)" data-id="{{ post.pk }}" title="Edit">
-                            <i class="fa fa-edit"></i>
-                        </a>
-                        <button class="btn btn-outline-danger btn-sm delete-data" type="button" data-id="{{ post.pk }}" title="Delete">
-                            <i class="fa fa-trash"></i>
-                        </button>
-                    </td>
+                      
                     </tr>
                     {% endfor %}
                   </tbody>
@@ -141,22 +132,15 @@
                 <label for="exampleFormControlInput1" class="form-label"
                   >File Name</label
                 >
-                <input
-                  type="file"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  name="file"
-                />
-                <label for="exampleFormControlInput1" class="form-label"
-                  >File Title</label
-                >
-                <input
-                  type="text"
-                  class="form-control"
-                  id="exampleFormControlInput1"
-                  name="filetitle"
-                />
-                <button class="btn btn-outline-success my-3">
+                <div class="fallback">
+                  <input name="file" type="file" id="actual-btn" hidden multiple required/>
+                  
+                  <label class="btn bg-gradient-primary m-0 ms-2" for="actual-btn">Choose File</label>
+                  <!-- name of file chosen -->
+                  <span id="file-chosen">No file chosen</span>
+                </div>
+                
+                <button id="submitbtn" class="btn btn-outline-success my-3">
                   Upload File
                 </button>
               </div>
@@ -172,8 +156,90 @@
 
 <!-- Specific JS goes HERE --> 
 {% block javascripts %} 
+<script src="/static/assets/js/plugins/choices.min.js"></script>
+  <script src="/static/assets/js/plugins/quill.min.js"></script>
+  <script src="/static/assets/js/plugins/flatpickr.min.js"></script>
+  <script src="/static/assets/js/plugins/dropzone.min.js"></script>
+
 <script>
-  const ext = document.getElementById('ext');
-  console.log(ext.value())
+
+  const actualBtn = document.getElementById('actual-btn');
+  const home = document.getElementById('home');
+  const homeico = document.getElementById('homeico');
+
+  home.onclick = function(){
+    clrhome()
+  }
+
+  const fileChosen = document.getElementById('file-chosen');
+
+  actualBtn.addEventListener('change', function(){
+    var valam = parseInt(0)
+    var valpm = parseInt(0)
+    for (var i = 0; i < this.files.length; ++i) {
+      //console.log(this.files[i].name)
+
+      if (this.files[i].name.includes("AM_report")){
+        //console.log("YES")
+        valam++
+      }
+
+      if (this.files[i].name.includes("PM_report")){
+        //console.log("YES")
+        valpm++
+      }
+      //alert(this.files[i].name.substring("AM"))
+      var allowedExtensions =
+                  /(\.txt)$/i;
+
+      if (!allowedExtensions.exec(this.files[i].name)) {
+              alert('Invalid file type');
+              document.getElementById('submitbtn').style.display = "none"
+              fileInput.value = '';
+              return false;
+          }
+      else{
+        document.getElementById('submitbtn').style.display = "block"
+      }
+      //children += '<li>' + input.files.item(i).name + '</li>';
+    }
+    //console.log(valam)
+    //console.log(valpm)
+
+    if (valam == valpm){
+      document.getElementById('submitbtn').style.display = "block"
+    }
+    if (valam != valpm){
+      document.getElementById('submitbtn').style.display = "none"
+    }
+
+    if(this.files.length = 1){
+      fileChosen.textContent = this.files[0].name
+    }
+    if(this.files.length > 1){
+      fileChosen.textContent = this.files.length +" " + "files selected"
+    }
+    
+  });
+  
+
+  
+
+
+  document.getElementById('btnclose').onclick = function(){
+    close()
+  }
+
+  function close(){
+    document.getElementById('exampleModal').style.display = "none"
+    
+  }
+
+  function clrhome(){
+    homeico.style.backgroundImage = "linear-gradient(310deg, #82d616 0%, #82d616 100%)";
+    
+  }
+
+
 </script>
 {% endblock javascripts %}
