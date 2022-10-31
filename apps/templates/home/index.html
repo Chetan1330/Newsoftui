@@ -16,6 +16,7 @@
     background-image: linear-gradient(310deg, #82d616 0%, #82d616 100%);
   }
 
+  
 </style>
 
 {% endblock stylesheets %}
@@ -25,11 +26,12 @@
 {% block content %}
 
 <div style="display: flex; padding: 10px 20px; justify-content: space-between">
-  <div class="">
-    <div class="container py-3">
-      <div class="col-5">
+  <div class="col-12">
+    <div class="row">
+      <div class="col-6">
         <button
       type="button"
+      onclick="clrhome()"
       class="btn btn-outline-primary"
       data-bs-toggle="modal"
       data-bs-target="#exampleModal"
@@ -38,6 +40,10 @@
       New Project
     </button>
       </div>
+    </div>
+    <div class="container py-3">
+      
+      
       <div class="row">
         <!--  -->
         {% for i in folder %}
@@ -127,18 +133,40 @@
   <script src="/static/assets/js/plugins/quill.min.js"></script>
   <script src="/static/assets/js/plugins/flatpickr.min.js"></script>
   <script src="/static/assets/js/plugins/dropzone.min.js"></script>
+  
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
   <script>
 
     const actualBtn = document.getElementById('actual-btn');
     const home = document.getElementById('home');
     const homeico = document.getElementById('homeico');
-
-    home.onclick = function(){
-      clrhome()
-    }
-
+    const newbtn = document.getElementById('newbtn');
     const fileChosen = document.getElementById('file-chosen');
 
+    // document.getElementById('#exampleModal').on('hidden', function () {
+    //     // do something…
+    //     console.log("Closed")
+    // })
+    // $(document).ready(function(){
+    //   $("#exampleModal").modal("show");
+        
+    //   $("#myBtn").click(function(){
+    //     $("#exampleModal").modal("hide");
+    //   });
+      
+    //   $("#exampleModal").on('hide.bs.modal', function(){
+    //     alert('The modal is about to be hidden.');
+    //   });
+    // });
+
+    $("#exampleModal").on('hide.bs.modal', function(){
+        // alert('The modal is about to be hidden.');
+        var success_url = "{% url 'index' %}"
+        // Redirect to URL
+        window.location.replace(success_url)
+      });
+    
     actualBtn.addEventListener('change', function(){
       var valam = parseInt(0)
       var valpm = parseInt(0)
@@ -173,17 +201,20 @@
       //console.log(valpm)
 
       if (valam == valpm){
-        document.getElementById('submitbtn').style.display = "block"
+        document.getElementById('submitbtn').disabled = false;
       }
       if (valam != valpm){
-        document.getElementById('submitbtn').style.display = "none"
+        document.getElementById('submitbtn').disabled = true;
       }
 
       if(this.files.length = 1){
         fileChosen.textContent = this.files[0].name
       }
       if(this.files.length > 1){
-        fileChosen.textContent = this.files.length +" " + "files selected"
+        for (var i = 0; i < this.files.length; ++i){
+          fileChosen.textContent = this.files[i].name
+        }
+        
       }
       
     });
@@ -197,20 +228,59 @@
 
     });
 
+      // $( 'exampleModal' )
+      // .on('hide', function() {
+      //     console.log('hide');
+      // })
+      // .on('hidden', function(){
+      //     console.log('hidden');
+      // })
+      // .on('show', function() {
+      //     console.log('show');
+      // })
+      // .on('shown', function(){
+      //     console.log('shown' )
+      // });
+    // $(document).on('hide.bs.modal','exampleModal', function () {
+    //    alert("Closed")
+    // });
+    // document.getElementById('exampleModal').on('hidden', function () {
+    //     // do something…
+    //     console.log("Closed")
+    // })
+
+    // document.getElementById('exampleModal').on('hidden.bs.modal', function () {
+    //   // do something…
+    //   console.log("Closed")
+    // })
+    function clrhome(){
+      document.getElementById('home1').style.backgroundColor = "#7c7d7d";
+      document.getElementById('home2').style.backgroundColor = "#7c7d7d";
+      document.getElementById('home3').style.backgroundImage = "linear-gradient(310deg, #7c7d7d 0%, #7c7d7d 100%)";
+      document.getElementById('home4').style.fill = "#67748E";
+      document.getElementById('home5').style.fill = "#67748E";
+
+      document.getElementById('set1').style.backgroundColor = "#7c7d7d";
+      document.getElementById('set2').style.backgroundImage = "linear-gradient(310deg, #7c7d7d 0%, #7c7d7d 100%)";
+      document.getElementById('set3').style.fill = "#67748E";
+      document.getElementById('set4').style.fill = "#67748E";
+
+      document.getElementById('log1').style.backgroundColor = "#7c7d7d";
+      document.getElementById('log2').style.backgroundImage = "linear-gradient(310deg, #7c7d7d 0%, #7c7d7d 100%)";
+      document.getElementById('log3').style.fill = "#67748E";
+      document.getElementById('log4').style.fill = "#67748E";
+    };
 
     document.getElementById('btnclose').onclick = function(){
       close()
-    }
+    };
 
     function close(){
       document.getElementById('exampleModal').style.display = "none"
       
-    }
+    };
 
-    function clrhome(){
-      homeico.style.backgroundImage = "linear-gradient(310deg, #82d616 0%, #82d616 100%)";
-      
-    }
+    
 
 
   </script>
