@@ -48,16 +48,16 @@
         <!--  -->
         {% for i in folder %}
         <div class="col-sm">
-          <div class="card" style="margin-top: 5px; width: 18rem">
+          <div class="card" style="margin-top: 5px; width: 16rem; height: 10rem;">
             <div class="card-body">
               <h5 class="card-title">{{i.foldername}}</h5>
               <p class="card-text">{{i.folderdesc}}</p>
               <a href="{% url 'folder' i.id %}" class="btn btn-outline-primary"
                 >Go Folder
               </a>
-              <a href="{% url 'delete' i.id %}" class="btn btn-outline-primary"
-                >Delete
-              </a>
+              <a style="margin-left: 30px;" href="{% url 'delete' i.id %}" class="btn-outline-danger" title="Delete">
+                <i class="fa fa-2x fa-trash"></i>
+            </a>
             </div>
           </div>
         </div>
@@ -99,12 +99,19 @@
                 <label class="mt-4 form-label">Input Files</label>
                   
                   
-                    <div class="fallback">
+                    <div class="form-control">
                       <input name="file" type="file" id="actual-btn" hidden multiple required/>
                       
                       <label class="btn bg-gradient-primary m-0 ms-2" for="actual-btn">Choose File</label>
                       <!-- name of file chosen -->
-                      <span id="file-chosen">No file chosen</span>
+                      
+                      <span id="file-chosen">No file Choosen</span>
+                      
+                      <div class="col-12" id="ctable">
+
+                      </div>
+
+                      
                     </div>
                   
                 
@@ -207,18 +214,37 @@
         document.getElementById('submitbtn').disabled = true;
       }
 
-      if(this.files.length = 1){
-        fileChosen.textContent = this.files[0].name
-      }
+      // if(this.files.length = 1){
+      //   fileChosen.textContent = this.files[0].name
+      // }
       if(this.files.length > 1){
+        // var variable = this.files
+        // document.write(variable)
         for (var i = 0; i < this.files.length; ++i){
-          fileChosen.textContent = this.files[i].name
+          // fileChosen.textContent = this.files[i].name
+          // document.getElementById('ctable').innerHTML = `<tr><td>${this.files[i].name}</td></tr>`;
+          document.getElementById('ctable').append(`${i+1}.${this.files[i].name}...`);
+          console.log(this.files[i].name)
+          // document.getElementById('ctable').innerHTML = `<div class="table-responsive">
+          //       <table class="table align-items-center mb-0">
+          //         <tbody>
+          //           <tr>
+          //             <td>
+          //               <div class="d-flex px-2 py-1">
+          //                 <div class="d-flex flex-column justify-content-center">
+          //                   <h6 class="mb-0 text-sm">${this.files[i].name}</h6>
+          //                 </div>
+          //               </div>
+          //             </td>
+          //           </tr>
+          //         </tbody>
+          //       </table>
+          //     </div>`
         }
         
       }
       
     });
-    
 
     Dropzone.autoDiscover = false;
     var drop = document.getElementById('dropzone')

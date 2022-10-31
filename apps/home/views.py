@@ -11,6 +11,7 @@ from django.template import loader
 from django.urls import reverse
 from django.conf import settings
 
+import datetime
 import io
 from django.core.files.base import ContentFile
 from pathlib import Path
@@ -39,7 +40,8 @@ def index(request):
     context = {'folder':folder,'segment':'index'}
     #return render(request,'home/index.html',context)
     #context = {'segment': 'index'}
-
+     
+    print(datetime.datetime.now().strftime ("%I:%M%p on %B %d, %Y"))
     html_template = loader.get_template('home/index.html')
     return HttpResponse(html_template.render(context, request))
 
@@ -65,10 +67,11 @@ def folder(request,folderid):
     ext = []
     for i in range(len(files)):
         # print(files[i].filetitle.split('.')[1])
-        ext.append([files[i],files[i].filetitle.split('.')[1]])
+        # print("Date is:",files[i].date)
+        ext.append([files[i],files[i].filetitle.split('.')[1],files[i].date])
     
     dirfiles = []
-    for i in range(len(files)):
+    for i in range(len(lstdir)):
         # print(files[i].filetitle.split('.')[1])
         dirfiles.append([lstdir[i],lstdir[i].split('.')[1]])
     print(dirfiles)
@@ -91,28 +94,27 @@ def folder(request,folderid):
         #file_title = request.FILES['file']
         file_user = request.FILES.getlist('file')
         file_path11 = settings.STATIC_ROOT + '/' + request.user.email + '/' + folder_name
-
+        fpath = settings.STATIC_ROOT
+        file_path = settings.MEDIA_ROOT +'/template1.docx'
         for f in file_user:
             # file_title = request.POST.get('filetitle')
             fileadd = File.objects.create(filetitle=f.name,file=f,folder=folder_user)
 
-            fpath = settings.STATIC_ROOT
-            file_path = settings.MEDIA_ROOT +'/template1.docx'
-            file_path11 = settings.STATIC_ROOT + '/' + request.user.email + '/' + folder_name
+            
 
-            if os.path.exists(file_path11):
-                tpl = DocxTemplate(file_path)
-                context = {"title":"Chetan"}
-                tpl.render(context)
-                tpl.save(file_path11 + "/" + "%s.docx" %str(f.name).split('.')[0].replace(" ", "_"))
+            # if os.path.exists(file_path11):
+            #     continue
+                # tpl = DocxTemplate(file_path)
+                # context = {"title":"Chetan"}
+                # tpl.render(context)
+                # tpl.save(file_path11 + "/" + "%s.docx" %str(f.name).split('.')[0].replace(" ", "_"))
                 # print("File name:",str(f.name).split('.')[0].replace(" ", "_"))
-            else:
-                
-                os.makedirs(file_path11)
-                tpl = DocxTemplate(file_path)
-                context = {"title":"Chetan"}
-                tpl.render(context)
-                tpl.save(file_path11 + "/" + "%s.docx" %str(f.name).split('.')[0].replace(" ", "_"))
+        if not os.path.exists(file_path11):
+            os.makedirs(file_path11)
+            tpl = DocxTemplate(file_path)
+            context = {"title":"Chetan"}
+            tpl.render(context)
+            tpl.save(file_path11 + "/" + "%s.docx" %str("Output"))
                 # print("File name:",str(f.name).split('.')[0].replace(" ", "_"))
         return redirect("folder",folderid=int(folderid))
     return render(request,'home/folder.html',context)
@@ -174,29 +176,28 @@ def addfolder(request):
         #file_title = request.FILES['file']
         file_user = request.FILES.getlist('file')
         file_path11 = settings.STATIC_ROOT + '/' + request.user.email + '/' + folder_name
+        fpath = settings.STATIC_ROOT
+        file_path = settings.MEDIA_ROOT +'/template1.docx'
 
         for f in file_user:
             # file_title = request.POST.get('filetitle')
             fileadd = File.objects.create(filetitle=f.name,file=f,folder=folder)
             
 
-            fpath = settings.STATIC_ROOT
-            file_path = settings.MEDIA_ROOT +'/template1.docx'
-            file_path11 = settings.STATIC_ROOT + '/' + request.user.email + '/' + folder_name
+            
 
-            if os.path.exists(file_path11):
-                tpl = DocxTemplate(file_path)
-                context = {"title":"Chetan"}
-                tpl.render(context)
-                tpl.save(file_path11 + "/" + "%s.docx" %str(f.name).split('.')[0].replace(" ", "_"))
+            # if os.path.exists(file_path11):
+            #     tpl = DocxTemplate(file_path)
+            #     context = {"title":"Chetan"}
+            #     tpl.render(context)
+            #     tpl.save(file_path11 + "/" + "%s.docx" %str(f.name).split('.')[0].replace(" ", "_"))
                 # print("File name:",str(f.name).split('.')[0].replace(" ", "_"))
-            else:
-                
-                os.makedirs(file_path11)
-                tpl = DocxTemplate(file_path)
-                context = {"title":"Chetan"}
-                tpl.render(context)
-                tpl.save(file_path11 + "/" + "%s.docx" %str(f.name).split('.')[0].replace(" ", "_"))
+        if not os.path.exists(file_path11):
+            os.makedirs(file_path11)
+            tpl = DocxTemplate(file_path)
+            context = {"title":"Chetan"}
+            tpl.render(context)
+            tpl.save(file_path11 + "/" + "%s.docx" %str("Output"))
                 # print("File name:",str(f.name).split('.')[0].replace(" ", "_"))
 
             
