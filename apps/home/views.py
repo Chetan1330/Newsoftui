@@ -11,6 +11,7 @@ from django.template import loader
 from django.urls import reverse
 from django.conf import settings
 
+
 import datetime
 import io
 from django.core.files.base import ContentFile
@@ -32,12 +33,14 @@ def index(request):
     print("User id:",request.user.id)
     folder = Folder.objects.filter(folderuser=request.user)
     image = Img.objects.filter(filetitle=request.user.id)
-    print(len(image))
+    # print("Media root:",file_path11)
+    for img11 in image:
+        print("Image is:",img11.file.url.split('/mediafiles')[1])
     # media_root = getattr(settings, 'MEDIA_ROOT', None)
     # if image:
     #     image.delete()
     # print(media_root)
-    context = {'folder':folder,'segment':'index'}
+    context = {'folder':folder,'segment':'index','img':img11,'image':"static" + img11.file.url.split('/mediafiles')[1]}
     #return render(request,'home/index.html',context)
     #context = {'segment': 'index'}
      
@@ -153,11 +156,10 @@ def image(request):
     image = Img.objects.filter(filetitle=request.user.id)
     if image:
         image.delete()
-    context = {'folder':folder,'segment':'index'}
     if request.method == 'POST':
         file_user = request.FILES.get('imgfile')
         fileadd = Img.objects.create(filetitle=request.user.id,file=file_user)
-    return render(request,'home/index.html',context)
+    return redirect('/account-settings.html')
 
 # Add Folder View
 def addfolder(request):
@@ -228,7 +230,12 @@ def addfolder(request):
 
 @login_required(login_url="/login/")
 def pages(request):
-    context = {}
+
+    image = Img.objects.filter(filetitle=request.user.id)
+    for img11 in image:
+        print("Image is:",img11.file.url.split('/mediafiles')[1])
+
+    context = {'image':"static" + img11.file.url.split('/mediafiles')[1]}
     # All resource paths end in .html.
     # Pick out the html file name from the url. And load that template.
     try:
