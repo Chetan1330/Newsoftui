@@ -34,7 +34,7 @@ def index(request):
     folder = Folder.objects.filter(folderuser=request.user)
     image = Img.objects.filter(filetitle=request.user.id)
     # print("Media root:",file_path11)
-    global imgurl
+    imgurl = ''
     for img11 in image:
         imgurl = img11.file.url.split('/mediafiles')[1]
         # print("Image is:",img11.file.url.split('/mediafiles')[1])
