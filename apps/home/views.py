@@ -39,7 +39,7 @@ def index(request):
         imgurl.append(img11.file.url.split('/mediafiles')[1])
         # print("Image is:",img11.file.url.split('/mediafiles')[1])
     # print("IMGURL:",imgurl[0])
-    print("IMGURL",imgurl)
+    print("IMGURL",imgurl[0])
     # media_root = getattr(settings, 'MEDIA_ROOT', None)
     # if image:
     #     image.delete()
