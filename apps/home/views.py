@@ -40,7 +40,7 @@ def index(request):
     # if image:
     #     image.delete()
     # print(media_root)
-    context = {'folder':folder,'segment':'index','img':img11,'image':"static" + img11.file.url.split('/mediafiles')[1]}
+    context = {'folder':folder,'segment':'index','image':"static" + img11.file.url.split('/mediafiles')[1]}
     #return render(request,'home/index.html',context)
     #context = {'segment': 'index'}
      
