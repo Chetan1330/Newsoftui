@@ -44,7 +44,7 @@
     <div class="container py-3">
       
       
-      <div class="row">
+      <div id="pcoded-inner-navbar" class="row">
         <!--  -->
         {% for i in folder %}
         <div class="col-sm">
@@ -153,6 +153,17 @@
     const newbtn = document.getElementById('newbtn');
     const fileChosen = document.getElementById('file-chosen');
 
+
+    $("#m-search").on("keyup",function(){
+      var e=$(this).val().toLowerCase(),s=$(this).val().length;
+      console.log(e)
+      $("#pcoded-inner-navbar > .col-sm > .card > .card-body > .card-title").each(function(){
+        // console.log(this)
+        var d=$(this).text();
+        var s=$(this).text().toLowerCase();
+        // console.log("Parent:",$(this).parent().parent().parent().parent())
+      if(d)var i=d.toLowerCase();
+      if(i){-1!==i.indexOf(e)?$(this).parent().parent().parent().show():$(this).parent().parent().parent().hide(),s>0?$("#pcoded-inner-navbar").hide():$("#pcoded-inner-navbar").show()}})})
     // document.getElementById('#exampleModal').on('hidden', function () {
     //     // do something…
     //     console.log("Closed")
