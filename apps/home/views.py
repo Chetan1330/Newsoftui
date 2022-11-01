@@ -34,18 +34,17 @@ def index(request):
     folder = Folder.objects.filter(folderuser=request.user)
     image = Img.objects.filter(filetitle=request.user.id)
     # print("Media root:",file_path11)
-    imgurl = []
+    global imgurl
     for img11 in image:
-        imgurl.clear()
-        imgurl.append(img11.file.url.split('/mediafiles')[1])
+        imgurl = img11.file.url.split('/mediafiles')[1]
         # print("Image is:",img11.file.url.split('/mediafiles')[1])
     # print("IMGURL:",imgurl[0])
-    # print("IMGURL",imgurl[0])
+    # print("IMGURL",imgurl)
     # media_root = getattr(settings, 'MEDIA_ROOT', None)
     # if image:
     #     image.delete()
     # print(media_root)
-    context = {'folder':folder,'segment':'index','image':"static" + imgurl[0]}
+    context = {'folder':folder,'segment':'index','image':"static" + imgurl}
     #return render(request,'home/index.html',context)
     #context = {'segment': 'index'}
      
