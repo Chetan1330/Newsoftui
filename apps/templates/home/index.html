@@ -26,7 +26,7 @@
 {% block content %}
 
 <div style="display: flex; padding: 10px 20px; justify-content: space-between">
-  <div class="col-12">
+  <div class="">
     <div class="row">
       <!-- <img class="img-radius" width="10" height="10" style="border-radius: 50%; float: left; margin-right: 10px;" src="{{image}}" alt="User image"> -->
       
@@ -34,7 +34,7 @@
         <button
       type="button"
       onclick="clrhome()"
-      class="btn btn-outline-success"
+      class="btn bg-gradient-success"
       data-bs-toggle="modal"
       data-bs-target="#exampleModal"
       
@@ -43,18 +43,18 @@
     </button>
       </div>
     </div>
-    <div class="container py-3">
+    <div class="col-12 py-3 row">
       
       
-      <div id="pcoded-inner-navbar" class="row">
+      <div id="pcoded-inner-navbar" class=" row">
         <!--  -->
         {% for i in folder %}
-        <div class="col-sm">
+        <div style="margin-left: 10px;" class="col-sm-3">
           <div class="card" style="margin-top: 5px; width: 16rem; height: 10rem;">
             <div class="card-body">
               <h5 class="card-title">{{i.foldername}}</h5>
               <p class="card-text">{{i.folderdesc}}</p>
-              <a href="{% url 'folder' i.id %}" class="btn btn-outline-success"
+              <a href="{% url 'folder' i.id %}" class="btn bg-gradient-success"
                 >Go Folder
               </a>
               <a style="margin-left: 30px;" href="{% url 'delete' i.id %}" class="btn-outline-danger" title="Delete">
